@@ -6,10 +6,6 @@ import java.util.TreeMap;
 
 public class Store {
 
-    public static final String NO_MORE_STOCK_IN_THE_STORE = "In the store there is no more of product: ";
-    public static final String NOT_ENOUGH_MONEY_MESSAGE = "You don't have enough money to buy product: ";
-    public static final String THERE_IS_NO_SUCH_PRODUCT_AS = "There is no such product as: ";
-
     private final Map<String, TreeMap<Product, Integer>> products;
 
     private Store() {
@@ -48,10 +44,10 @@ public class Store {
 
         Map<Product, Integer> currentProduct = products.get(productName);
         validateProduct(currentProduct == null,
-                THERE_IS_NO_SUCH_PRODUCT_AS + "\"" + productName + "\"" + " in the shop");
+                ExceptionsConstantsMessage.THERE_IS_NO_SUCH_PRODUCT_AS + "\"" + productName + "\"" + " in the shop");
 
         if (!isProductStocked(productName)) {
-            throw new IllegalArgumentException(NO_MORE_STOCK_IN_THE_STORE + productName);
+            throw new IllegalArgumentException(ExceptionsConstantsMessage.NO_MORE_STOCK_IN_THE_STORE + productName);
         }
 
         int productCount = getProductCount(currentProduct);
@@ -95,7 +91,7 @@ public class Store {
                         removeProductInstance(currentProduct, product);
                         removeProductFromShop(productName, currentProduct);
                     } else {
-                        throw new IllegalArgumentException(NOT_ENOUGH_MONEY_MESSAGE + productName);
+                        throw new IllegalArgumentException(ExceptionsConstantsMessage.NOT_ENOUGH_MONEY_MESSAGE+ productName);
                     }
                 }
             }
@@ -104,7 +100,7 @@ public class Store {
             totalPrice = product.getProductPrice().multiply(BigDecimal.valueOf(sellQuantity));
 
             if (!isMoneyEnough(totalPrice, availableMoney)) {
-                throw new IllegalArgumentException(NOT_ENOUGH_MONEY_MESSAGE + productName);
+                throw new IllegalArgumentException(ExceptionsConstantsMessage.NOT_ENOUGH_MONEY_MESSAGE + productName);
             }
 
             currentProduct.put(product, currentProduct.get(product) - sellQuantity);
@@ -157,7 +153,7 @@ public class Store {
     }
 
     /*
-    * This method checks if we have enough money
+    * This method checks if we have enough money to buy
      */
     private boolean isMoneyEnough(BigDecimal neededMoney, BigDecimal availableMoney) {
         return neededMoney.compareTo(availableMoney) <= 0;
